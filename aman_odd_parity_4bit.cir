@@ -1,0 +1,58 @@
+***4 Bit Odd Parity Checker***
+.model nmod nmos level=54 version=4.7
+.model pmod pmos level=54 version=4.7
+
+.subckt inverter in vdd out
+M1 out in 0 0 nmod w=100u l=10u
+M2 out in vdd vdd pmod w=200u l=10u
+.model nmod nmos level=54 version=4.7
+.model pmod pmos level=54 version=4.7
+.ends
+
+.subckt tg in out sel selb
+M1 out sel in in nmod w=100u l=10u
+M2 out selb in in pmod w=200u l=10u
+.ends
+
+.subckt xor_gate a b out ab bb
+Xab_b a out b bb tg
+Xa_bb ab out bb b tg
+.model nmod nmos level=54 version=4.7
+.model pmod pmos level=54 version=4.7
+.ends
+
+*Va 1 0 pulse(0 5 0 0 0 50m 100m)*
+*Vb 2 0 pulse(0 5 0 0 0 100m 200m)*
+*Vc 3 0 pulse(0 5 0 0 0 200m 400m)*
+*Vd 4 0 pulse(0 5 0 0 0 400m 800m)*
+*Vab 5 0 pulse(5 0 0 0 0 50m 100m)*
+*Vbb 6 0 pulse(5 0 0 0 0 100m 200m)*
+*Vcb 7 0 pulse(5 0 0 0 0 200m 400m)*
+*Vdb 8 0 pulse(5 0 0 0 0 400m 800m)*
+
+Vdd 9 0 dc 5
+
+*** For Testing the following value should output ON ***
+Va 1 0 dc 0v
+Vb 2 0 dc 0v
+Vc 3 0 dc 0v
+Vd 4 0 dc 5v
+Vab 5 0 dc 5v
+Vbb 6 0 dc 5v
+Vcb 7 0 dc 5v 
+Vdb 8 0 dc 0v
+ 
+Xab 1 2 10 5 6 xor_gate
+Xcd 3 4 11 7 8 xor_gate
+Xab_inv 10 9 12 inverter
+Xcd_inv 11 9 13 inverter
+Xabcd 10 11 14 12 13 xor_gate
+Xout 14 5 15 inverter
+
+.tran 0.1m 400m
+.control 
+run
+*plot v(1) v(2) v(3) v(4) v(14)*
+plot v(14) v(15)
+.endc
+.end
