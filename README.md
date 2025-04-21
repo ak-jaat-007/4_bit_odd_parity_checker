@@ -15,6 +15,8 @@ This is a CMOS-based 4-bit odd parity checker using transmission gates, designed
 - `.msk` file — CMOS layout in Microwind
 - `.cir` / `.sp` file — Spice netlist for simulation
 - Screenshots — Output waveforms and layout view
+- Added project report and presentation slides
+
 
 ## 📌 Author
 Made by Aman Kaliramna for CMOS Design Project.
